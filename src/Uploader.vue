@@ -1,99 +1,3 @@
-<template>
-    <div>
-        <div class="mu-container" :class="isInvalid?'mu-red-border':''">
-            <Loader
-                    color="#0275d8"
-                    :active="isLoading"
-                    spinner="line-scale"
-                    background-color = 'rgba(255, 255, 255, .4)'
-            />
-            <div class="mu-elements-wraper">
-
-                <!--UPLOAD BUTTON-->
-                <div class="mu-plusbox-container">
-                    <label for="mu-file-input" class="mu-plusbox">
-                        <svg
-                                class="mu-plus-icon"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="1em"
-                                height="1em"
-                                preserveAspectRatio="xMidYMid meet"
-                                viewBox="0 0 24 24">
-                            <g fill="none">
-                                <path
-                                        d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1zm1 15a1 1 0 1 1-2 0v-3H8a1 1 0 1 1 0-2h3V8a1 1 0 1 1 2 0v3h3a1 1 0 1 1 0 2h-3v3z"
-                                        fill="currentColor"/>
-                            </g>
-                        </svg>
-                    </label>
-                    <input @change="fileChange" id="mu-file-input" type="file" accept="image/*" multiple hidden>
-                </div>
-
-                <!--IMAGES PREVIEW-->
-                <div v-for="(image, index) in savedMedia" :key="index" class="mu-image-container">
-                    <img :src="location +'/'+ image.name" alt=""  class="mu-images-preview">
-                    <button @click="removeSavedMedia(index)" class="mu-close-btn" type="button">
-                        <i class="mdi mdi-delete text-xl"></i>
-                    </button>
-                    <template v-if="showLeftRotateButton">
-                        <button @click="rotateLeft(index)" class="mu-left-rotate-btn" type="button">
-                            <i class="mdi mdi-arrow-u-left-top-bold text-xl"></i>
-                        </button>
-                    </template>
-                    <template v-if="showRightRotateButton">
-                        <button @click="rotateRight(index)" class="mu-right-rotate-btn" type="button">
-                            <i class="mdi mdi-arrow-u-right-top-bold text-xl"></i>
-                        </button>
-                    </template>
-                </div>
-                <div v-for="(image, index) in addedMedia" :key="index" class="mu-image-container">
-                    <!--                    <img :src="image.url" alt=""  class="mu-images-preview">-->
-                    <canvas :ref="'canvas' + index" class="mu-images-preview2"></canvas>
-                    <button
-                            @click="removeAddedMedia(index)"
-                            :disabled="isButtonDisabled(index)"
-                            class="mu-close-btn"
-                            type="button"
-                    >
-                        <i class="mdi mdi-delete text-xl"></i>
-                    </button>
-                    <template v-if="showLeftRotateButton">
-                        <button
-                                @click="rotateLeft(index)"
-                                :disabled="isButtonDisabled(index)"
-                                class="mu-left-rotate-btn"
-                                type="button"
-                        >
-                            <i class="mdi mdi-arrow-u-left-top-bold text-xl"></i>
-                        </button>
-                    </template>
-                    <template v-if="showRightRotateButton">
-                        <button
-                                @click="rotateRight(index)"
-                                :disabled="isButtonDisabled(index)"
-                                class="mu-right-rotate-btn"
-                                type="button"
-                        >
-                            <i class="mdi mdi-arrow-u-right-top-bold text-xl"></i>
-                        </button>
-                    </template>
-                </div>
-            </div>
-        </div>
-        <div>
-            <div v-for="(image, index) in addedMedia" :key="index" class="mu-mt-1">
-                <input type="text" name="added_media[]" :value="image.name" hidden>
-            </div>
-            <div v-for="(image, index) in removedMedia" :key="index" class="mu-mt-1">
-                <input type="text" name="removed_media[]" :value="image.name" hidden>
-            </div>
-            <div v-if="allMedia.length" class="mu-mt-1">
-                <input type="text" name="media" value="1" hidden>
-            </div>
-        </div>
-    </div>
-</template>
-
 <script>
     import Loader from './loader/index.vue';
     import axios from 'axios'
@@ -144,7 +48,6 @@
         data(){
             return{
                 addedMedia:[],
-                savedMedia:[],
                 removedMedia:[],
                 isLoading:true
             }
@@ -154,15 +57,19 @@
         },
         methods:{
             init(){
-                this.savedMedia = this.media
+                this.addedMedia = this.media
 
-                this.savedMedia.forEach((image, index) => {
-                    if(!this.savedMedia[index].url){
-                        this.savedMedia[index].url = this.location + "/" + image.name
+                this.isLoading = true;
+
+                this.addedMedia.forEach((image, index) => {
+                    if(!this.addedMedia[index].url){
+                        this.addedMedia[index].url = this.location + "/" + image.name
                     }
                 });
 
-                setTimeout(() => this.isLoading = false, 1000)
+                //setTimeout(() => this.isLoading = false, 1000)
+
+                this.isLoading = false;
 
                 this.$emit('init', this.allMedia)
             },
@@ -178,7 +85,15 @@
                             formData.set('image', files[i])
 
                             const {data} = await axios.post(this.server, formData)
-                            let addedImage = {url:url, name:data.name, size:files[i].size, type:files[i].type}
+
+                            console.log('data from server', data);
+                            let addedImage = {
+                                id: data.data.id,
+                                name: data.data.name,
+                                size: files[i].size,
+                                type: files[i].type,
+                                url: this.location + "/" + data.data.name,
+                            };
                             this.addedMedia.push(addedImage)
 
                             this.$emit('change', this.allMedia)
@@ -204,14 +119,6 @@
             removeAddedMedia(index){
                 let removedImage = this.addedMedia[index]
                 this.addedMedia.splice(index,1)
-
-                this.$emit('change', this.allMedia)
-                this.$emit('remove', removedImage, this.removedMedia)
-            },
-            removeSavedMedia(index){
-                let removedImage = this.savedMedia[index]
-                this.removedMedia.push(removedImage)
-                this.savedMedia.splice(index,1)
 
                 this.$emit('change', this.allMedia)
                 this.$emit('remove', removedImage, this.removedMedia)
@@ -298,12 +205,12 @@
                 return newImgData;
             },
             isButtonDisabled(index) {
-                return true;
+                return false;
             },
         },
         computed:{
             allMedia(){
-                return [...this.savedMedia, ...this.addedMedia];
+                return [...this.addedMedia];
             },
             // Computed svojstvo koje vraća kopiju niza addedMedia
             watchedMedia() {
@@ -323,9 +230,85 @@
         }
     }
 </script>
+<template>
+    <div>
+        <div class="mu-container" :class="isInvalid?'mu-red-border':''">
+            <Loader
+                    color="#0275d8"
+                    :active="isLoading"
+                    spinner="line-scale"
+                    background-color = 'rgba(255, 255, 255, .4)'
+            />
+            <div class="mu-elements-wraper">
 
+                <!--UPLOAD BUTTON-->
+                <div class="mu-plusbox-container">
+                    <label for="mu-file-input" class="mu-plusbox">
+                        <svg
+                                class="mu-plus-icon"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="1em"
+                                height="1em"
+                                preserveAspectRatio="xMidYMid meet"
+                                viewBox="0 0 24 24">
+                            <g fill="none">
+                                <path
+                                        d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1zm1 15a1 1 0 1 1-2 0v-3H8a1 1 0 1 1 0-2h3V8a1 1 0 1 1 2 0v3h3a1 1 0 1 1 0 2h-3v3z"
+                                        fill="currentColor"/>
+                            </g>
+                        </svg>
+                    </label>
+                    <input @change="fileChange" id="mu-file-input" type="file" accept="image/*" multiple hidden>
+                </div>
+
+                <!--IMAGES PREVIEW-->
+                <div v-for="(image, index) in addedMedia" :key="index" class="mu-image-container">
+                    <canvas :ref="'canvas' + index" class="mu-images-preview"></canvas>
+                    <button
+                            @click="removeAddedMedia(index)"
+                            :disabled="isButtonDisabled(index)"
+                            class="mu-close-btn"
+                            type="button"
+                    >
+                        <i class="mdi mdi-delete text-xl"></i>
+                    </button>
+                    <template v-if="showLeftRotateButton">
+                        <button
+                                @click="rotateLeft(index)"
+                                :disabled="isButtonDisabled(index)"
+                                class="mu-left-rotate-btn"
+                                type="button"
+                        >
+                            <i class="mdi mdi-arrow-u-left-top-bold text-xl"></i>
+                        </button>
+                    </template>
+                    <template v-if="showRightRotateButton">
+                        <button
+                                @click="rotateRight(index)"
+                                :disabled="isButtonDisabled(index)"
+                                class="mu-right-rotate-btn"
+                                type="button"
+                        >
+                            <i class="mdi mdi-arrow-u-right-top-bold text-xl"></i>
+                        </button>
+                    </template>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div v-for="(image, index) in addedMedia" :key="index" class="mu-mt-1">
+                <input type="text" name="added_media[]" :value="image.name" hidden>
+            </div>
+            <div v-for="(image, index) in removedMedia" :key="index" class="mu-mt-1">
+                <input type="text" name="removed_media[]" :value="image.name" hidden>
+            </div>
+            <div v-if="allMedia.length" class="mu-mt-1">
+                <input type="text" name="media" value="1" hidden>
+            </div>
+        </div>
+    </div>
+</template>
 <style scoped>
-
     .mu-container{
         background-color: #fbfbfb !important;
         border-radius: 5px !important;
@@ -335,17 +318,11 @@
         width: 100% !important;
         height: auto !important;
     }
-
-    /* ----elements-wrapper--- */
-
     .mu-elements-wraper {
         padding: 1rem !important;
         display: flex !important;
         flex-wrap: wrap !important;
     }
-
-    /* ----plusbox--- */
-
     .mu-plusbox-container{
         display: inline-flex !important;
         height: 90px !important;
@@ -374,18 +351,13 @@
         font-size: 3rem !important;
         flex: 1;
     }
-
-    /* ----media-preview---- */
-
     .mu-image-container{
         width: 140px !important;
         height: 90px !important;
         margin: 0.25rem !important;
-
         position: relative;
     }
-    .mu-images-preview,
-    .mu-images-preview2 {
+    .mu-images-preview {
         border-radius: 5px !important;
         border: 1px solid #818181 !important;
         width: 140px !important;
@@ -397,11 +369,9 @@
     .mu-images-preview:hover{
         filter: brightness(90%);
     }
-
     button:disabled {
         opacity: 0.4;
     }
-
     .mu-close-btn{
         display:block;
         background: none !important;
@@ -414,7 +384,6 @@
         top: 0px;
         right: 3px;
     }
-
     .mu-left-rotate-btn {
         display:block;
         background: none !important;
@@ -450,24 +419,16 @@
     .mu-right-rotate-btn:hover {
         color: yellow !important;
     }
-
-    /* -------------------- */
-
     .mu-red-border {
         border: 1px solid #dc3545 !important;
     }
-
     .mu-mt-1 {
         margin-top: 0.25rem !important;
     }
-
-    /* -------------------- */
-
     img {
         -webkit-user-drag: none;
         -khtml-user-drag: none;
         -moz-user-drag: none;
         -o-user-drag: none;
     }
-
 </style>
