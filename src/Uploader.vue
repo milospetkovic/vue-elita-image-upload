@@ -41,6 +41,10 @@
                 type: Boolean,
                 default: false,
             },
+            buttonsDisabled: {
+                type: Boolean,
+                default: false,
+            },
         },
         mounted() {
             this.init()
@@ -52,22 +56,15 @@
                 isLoading:true
             }
         },
-        watch: {
-            watchedMedia: 'renderImages',
-        },
+        expose: ['finishedRotateImage'],
         methods:{
             init(){
                 this.addedMedia = this.media
 
                 this.isLoading = true;
 
-                this.addedMedia.forEach((image, index) => {
-                    if(!this.addedMedia[index].url){
-                        this.addedMedia[index].url = this.location + "/" + image.name
-                    }
-                });
-
-                //setTimeout(() => this.isLoading = false, 1000)
+                this.getImagesPreview();
+                this.renderImages();
 
                 this.isLoading = false;
 
@@ -98,6 +95,7 @@
 
                             this.$emit('change', this.allMedia)
                             this.$emit('add', addedImage, this.addedMedia)
+                            this.renderImages()
                         }else{
                             this.$emit('maxFilesize', files[i].size)
                             if(this.warnings){
@@ -156,7 +154,14 @@
                     });
                 });
             },
-            rotateLeft(index) {
+            rotateImage(index, rotateLeft) {
+
+                console.log('in component rotateLeft', rotateLeft);
+
+                let urlsByIndex = [];
+
+                this.$emit('rotateImage', this.addedMedia[index], rotateLeft);
+
                 const canvas = this.$refs['canvas' + index][0];
                 const ctx = canvas.getContext('2d');
                 const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -178,6 +183,7 @@
                 ctx.putImageData(this.rotateImageData(imgData), offsetX, offsetY);
             },
             rotateRight(index) {
+
                 // Rotiranje slike za 90 stepeni ulevo
                 const canvas = this.$refs['canvas' + index][0];
                 const ctx = canvas.getContext('2d');
@@ -204,17 +210,20 @@
 
                 return newImgData;
             },
-            isButtonDisabled(index) {
-                return false;
+            getImagesPreview() {
+                this.addedMedia.forEach((image, index) => {
+                    if (!this.addedMedia[index].url) {
+                        this.addedMedia[index].url = this.location + "/" + image.name
+                    }
+                });
+            },
+            finishedRotateImage(response) {
+                console.log('finishedRotateImage', response);
             },
         },
         computed:{
             allMedia(){
                 return [...this.addedMedia];
-            },
-            // Computed svojstvo koje vraća kopiju niza addedMedia
-            watchedMedia() {
-                return JSON.parse(JSON.stringify(this.addedMedia));
             },
         },
         emits: [
@@ -223,7 +232,8 @@
             'add',
             'remove',
             'max',
-            'maxFilesize'
+            'maxFilesize',
+            'rotateImage',
         ],
         components:{
             Loader
@@ -266,7 +276,7 @@
                     <canvas :ref="'canvas' + index" class="mu-images-preview"></canvas>
                     <button
                             @click="removeAddedMedia(index)"
-                            :disabled="isButtonDisabled(index)"
+                            :disabled="buttonsDisabled"
                             class="mu-close-btn"
                             type="button"
                     >
@@ -274,8 +284,8 @@
                     </button>
                     <template v-if="showLeftRotateButton">
                         <button
-                                @click="rotateLeft(index)"
-                                :disabled="isButtonDisabled(index)"
+                                @click="rotateImage(index, true)"
+                                :disabled="buttonsDisabled"
                                 class="mu-left-rotate-btn"
                                 type="button"
                         >
@@ -284,8 +294,8 @@
                     </template>
                     <template v-if="showRightRotateButton">
                         <button
-                                @click="rotateRight(index)"
-                                :disabled="isButtonDisabled(index)"
+                                @click="rotateImage(index)"
+                                :disabled="buttonsDisabled"
                                 class="mu-right-rotate-btn"
                                 type="button"
                         >
