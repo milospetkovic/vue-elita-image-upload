@@ -230,7 +230,7 @@
                 const errorDiv = document.createElement('div');
                 errorDiv.classList.add('text-red');
                 errorDiv.textContent = message;
-                const container = document.getElementById('upload-errors'); // Pretpostavljamo da imate div sa id "error-container"
+                const container = document.getElementById('upload-errors');
                 container.appendChild(errorDiv);
                 setTimeout(() => {
                     container.removeChild(errorDiv);
