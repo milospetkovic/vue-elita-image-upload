@@ -81,21 +81,27 @@
                             let url = URL.createObjectURL(files[i])
                             formData.set('image', files[i])
 
-                            const {data} = await axios.post(this.server, formData)
+                            // Get data from the server.
+                            const {data} = await axios.post(this.server, formData);
 
-                            console.log('data from server', data);
-                            let addedImage = {
-                                id: data.data.id,
-                                name: data.data.name,
-                                size: files[i].size,
-                                type: files[i].type,
-                                url: this.location + "/" + data.data.name,
-                            };
-                            this.addedMedia.push(addedImage)
+                            if (!data.isError) {
 
-                            this.$emit('change', this.allMedia)
-                            this.$emit('add', addedImage, this.addedMedia)
-                            this.renderImages()
+                                let addedImage = {
+                                    id: data.data.id,
+                                    name: data.data.name,
+                                    size: files[i].size,
+                                    type: files[i].type,
+                                    url: this.location + "/" + data.data.name,
+                                };
+                                this.addedMedia.push(addedImage)
+
+                                this.$emit('change', this.allMedia)
+                                this.$emit('add', addedImage, this.addedMedia)
+                                this.renderImages()
+                            } else {
+                                console.error('Error from server', data.errorMessage);
+                                this.showUploadError(data.errorMessage);
+                            }
                         }else{
                             this.$emit('maxFilesize', files[i].size)
                             if(this.warnings){
@@ -220,6 +226,16 @@
             finishedRotateImage(response) {
                 console.log('finishedRotateImage', response);
             },
+            showUploadError(message) {
+                const errorDiv = document.createElement('div');
+                errorDiv.classList.add('text-red');
+                errorDiv.textContent = message;
+                const container = document.getElementById('upload-errors'); // Pretpostavljamo da imate div sa id "error-container"
+                container.appendChild(errorDiv);
+                setTimeout(() => {
+                    container.removeChild(errorDiv);
+                }, 5000);
+            }
         },
         computed:{
             allMedia(){
@@ -315,6 +331,8 @@
             <div v-if="allMedia.length" class="mu-mt-1">
                 <input type="text" name="media" value="1" hidden>
             </div>
+        </div>
+        <div id="upload-errors">
         </div>
     </div>
 </template>
@@ -440,5 +458,8 @@
         -khtml-user-drag: none;
         -moz-user-drag: none;
         -o-user-drag: none;
+    }
+    .text-red {
+        color: red;
     }
 </style>
