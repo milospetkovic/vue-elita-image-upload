@@ -155,8 +155,7 @@
                 img.onload = () => {
                     //canvas.width = 140;
                     //canvas.height = 90;
-
-                    console.log('ENTER on img load');
+                    console.log('on img load');
 
                     const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
                     const scaledWidth = img.width * scale;
