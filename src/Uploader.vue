@@ -128,11 +128,11 @@
                 this.$emit('remove', removedImage, this.removedMedia)
             },
             renderImages() {
-                console.log('renderimages ');
+                console.log('renderimages');
                 this.$nextTick(() => {
                     this.addedMedia.forEach((image, index) => {
                         const canvas = this.$refs['canvas' + index][0];
-                        const imageSrc = this.addedMedia[index].url;
+                        const imageSrc = encodeURI(this.addedMedia[index].url);
 
                         console.log('renderimages canvas', canvas);
                         console.log('renderimages imageSrc', imageSrc);
@@ -172,8 +172,7 @@
                 console.log('in component rotateLeft', rotateLeft);
                 this.$emit('rotateImage', this.addedMedia[index], rotateLeft);
                 const canvas = this.$refs['canvas' + index][0];
-
-                const imageSrc = this.addedMedia[index].url;
+                const imageSrc = encodeURI(this.addedMedia[index].url);
 
                 console.log('rotateImage canvas', canvas);
                 console.log('rotateImage imageSrc', imageSrc);
