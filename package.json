@@ -1,6 +1,6 @@
 {
   "name": "vue-elita-image-upload",
-  "version": "2.1.3",
+  "version": "3.0.0",
   "description": "upload multiple images with preview",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "forms",
     "laravel"
   ],
-  "author": "Saimo",
+  "author": "Milos Petkovic",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/milospetkovic/vue-elita-image-upload/issues"
