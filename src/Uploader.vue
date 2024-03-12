@@ -129,97 +129,64 @@
             },
             renderImages() {
                 console.log('renderimages ');
-                // Koristimo this.$nextTick() kako bismo osigurali da se refs objekat ažurira
                 this.$nextTick(() => {
                     this.addedMedia.forEach((image, index) => {
                         const canvas = this.$refs['canvas' + index][0];
-                        const ctx = canvas.getContext('2d');
+                        const imageSrc = this.addedMedia[index].url;
 
-                        // Kreiramo novu sliku
-                        const img = new Image();
-                        img.onload = () => {
+                        console.log('renderimages canvas', canvas);
+                        console.log('renderimages imageSrc', imageSrc);
 
-                            canvas.width = 140; // Postavite željenu širinu
-                            canvas.height = 90; // Postavite željenu visinu
-
-                            // Postavljanje antialiasing-a
-                            ctx.imageSmoothingEnabled = true;
-                            ctx.imageSmoothingQuality = 'high';
-
-                            // Postavljanje dimenzija i položaja slike unutar canvasa
-                            const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
-                            const scaledWidth = img.width * scale;
-                            const scaledHeight = img.height * scale;
-                            const offsetX = (canvas.width - scaledWidth) / 2;
-                            const offsetY = (canvas.height - scaledHeight) / 2;
-
-                            // Crtanje slike na canvasu
-                            ctx.drawImage(img, offsetX, offsetY, scaledWidth, scaledHeight);
-                        };
-                        img.src = image.url;
+                        this.drawImageOnCanvas(canvas, imageSrc);
                     });
                 });
             },
-            rotateImage(index, rotateLeft) {
+            drawImageOnCanvas(canvas, imageSrc) {
 
+                console.log('drawImageOnCanvas', imageSrc);
+
+                const ctx = canvas.getContext('2d');
+
+                // Clear canvas before drawing
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const img = new Image();
+
+                img.onload = () => {
+                    //canvas.width = 140;
+                    //canvas.height = 90;
+
+                    console.log('ENTER on img load');
+
+                    const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+                    const scaledWidth = img.width * scale;
+                    const scaledHeight = img.height * scale;
+                    const offsetX = (canvas.width - scaledWidth) / 2;
+                    const offsetY = (canvas.height - scaledHeight) / 2;
+
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, offsetX, offsetY, scaledWidth, scaledHeight);
+                };
+                img.src = imageSrc + '?t=' + new Date().getTime();
+            },
+            rotateImage(index, rotateLeft=false) {
                 console.log('in component rotateLeft', rotateLeft);
-
-                let urlsByIndex = [];
-
                 this.$emit('rotateImage', this.addedMedia[index], rotateLeft);
-
                 const canvas = this.$refs['canvas' + index][0];
-                const ctx = canvas.getContext('2d');
-                const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-                // Rotiranje dimenzija canvasa
-                const temp = canvas.width;
-                canvas.width = canvas.height;
-                canvas.height = temp;
+                const imageSrc = this.addedMedia[index].url;
 
-                // Postavljanje antialiasing-a
-                ctx.imageSmoothingEnabled = true;
-                ctx.imageSmoothingQuality = 'high';
+                console.log('rotateImage canvas', canvas);
+                console.log('rotateImage imageSrc', imageSrc);
 
-                // Centriranje slike u novim dimenzijama canvasa
-                const offsetX = (canvas.width - imgData.height) / 2;
-                const offsetY = (canvas.height - imgData.width) / 2;
-
-                // Rotiranje slike za 90 stepeni ulevo i crtanje na canvasu
-                ctx.putImageData(this.rotateImageData(imgData), offsetX, offsetY);
-            },
-            rotateRight(index) {
-
-                // Rotiranje slike za 90 stepeni ulevo
-                const canvas = this.$refs['canvas' + index][0];
-                const ctx = canvas.getContext('2d');
-                const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-                canvas.width = imgData.height;
-                canvas.height = imgData.width;
-                ctx.putImageData(this.rotateImageData(imgData), 0, 0);
-            },
-            rotateImageData(imgData) {
-                const newImgData = new ImageData(imgData.height, imgData.width);
-
-                for (let x = 0; x < imgData.width; x++) {
-                    for (let y = 0; y < imgData.height; y++) {
-                        const newIndex = (x * imgData.height + (imgData.height - y)) * 4;
-                        const oldIndex = (y * imgData.width + x) * 4;
-
-                        newImgData.data[newIndex] = imgData.data[oldIndex];
-                        newImgData.data[newIndex + 1] = imgData.data[oldIndex + 1];
-                        newImgData.data[newIndex + 2] = imgData.data[oldIndex + 2];
-                        newImgData.data[newIndex + 3] = imgData.data[oldIndex + 3];
-                    }
-                }
-
-                return newImgData;
+                this.drawImageOnCanvas(canvas, imageSrc);
+                // this.getImagesPreview();
+                // this.renderImages();
             },
             getImagesPreview() {
                 this.addedMedia.forEach((image, index) => {
                     if (!this.addedMedia[index].url) {
-                        this.addedMedia[index].url = this.location + "/" + image.name
+                        this.addedMedia[index].url = this.location + "/" + image.name;
                     }
                 });
             },
@@ -336,7 +303,7 @@
         </div>
     </div>
 </template>
-<style scoped>
+<style>
     .mu-container{
         background-color: #fbfbfb !important;
         border-radius: 5px !important;
@@ -390,9 +357,10 @@
         border: 1px solid #818181 !important;
         width: 140px !important;
         height: 90px !important;
-        transition: filter 0.1s linear;
+        /*transition: filter 0.1s linear;*/
         object-fit: cover;
         object-position: center;
+        background: gray;
     }
     .mu-images-preview:hover{
         filter: brightness(90%);
