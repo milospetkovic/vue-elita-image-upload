@@ -170,16 +170,7 @@
             },
             rotateImage(index, rotateLeft=false) {
                 console.log('in component rotateLeft', rotateLeft);
-                this.$emit('rotateImage', this.addedMedia[index], rotateLeft);
-                const canvas = this.$refs['canvas' + index][0];
-                const imageSrc = encodeURI(this.addedMedia[index].url);
-
-                console.log('rotateImage canvas', canvas);
-                console.log('rotateImage imageSrc', imageSrc);
-
-                this.drawImageOnCanvas(canvas, imageSrc);
-                // this.getImagesPreview();
-                // this.renderImages();
+                this.$emit('rotateImage', this.addedMedia[index], index, rotateLeft);
             },
             getImagesPreview() {
                 this.addedMedia.forEach((image, index) => {
@@ -188,8 +179,15 @@
                     }
                 });
             },
-            finishedRotateImage(response) {
-                console.log('finishedRotateImage', response);
+            finishedRotateImage(response, index) {
+                if (response.data.isError === false) {
+                    console.log('finishedRotateImage - now rotate!', response);
+                    const canvas = this.$refs['canvas' + index][0];
+                    const imageSrc = encodeURI(this.addedMedia[index].url);
+                    this.drawImageOnCanvas(canvas, imageSrc);
+                } else {
+                    console.log('ERROR finishedRotateImage', response);
+                }
             },
             showUploadError(message) {
                 const errorDiv = document.createElement('div');
