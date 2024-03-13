@@ -253,34 +253,36 @@
                 <!--IMAGES PREVIEW-->
                 <div v-for="(image, index) in addedMedia" :key="index" class="mu-image-container">
                     <canvas :ref="'canvas' + index" class="mu-images-preview"></canvas>
-                    <button
-                            @click="removeAddedMedia(index)"
-                            :disabled="buttonsDisabled"
-                            class="mu-close-btn"
-                            type="button"
-                    >
-                        <i class="mdi mdi-delete text-xl"></i>
-                    </button>
-                    <template v-if="showLeftRotateButton">
+                    <div class="img-actions-box">
                         <button
-                                @click="rotateImage(index, true)"
+                                @click="removeAddedMedia(index)"
                                 :disabled="buttonsDisabled"
-                                class="mu-left-rotate-btn"
+                                class="mu-close-btn"
                                 type="button"
                         >
-                            <i class="mdi mdi-arrow-u-left-top-bold text-xl"></i>
+                            <i class="mdi mdi-delete text-xl"></i>
                         </button>
-                    </template>
-                    <template v-if="showRightRotateButton">
-                        <button
-                                @click="rotateImage(index)"
-                                :disabled="buttonsDisabled"
-                                class="mu-right-rotate-btn"
-                                type="button"
-                        >
-                            <i class="mdi mdi-arrow-u-right-top-bold text-xl"></i>
-                        </button>
-                    </template>
+                        <template v-if="showLeftRotateButton">
+                            <button
+                                    @click="rotateImage(index, true)"
+                                    :disabled="buttonsDisabled"
+                                    class="mu-left-rotate-btn"
+                                    type="button"
+                            >
+                                <i class="mdi mdi-arrow-u-left-top-bold text-xl"></i>
+                            </button>
+                        </template>
+                        <template v-if="showRightRotateButton">
+                            <button
+                                    @click="rotateImage(index)"
+                                    :disabled="buttonsDisabled"
+                                    class="mu-right-rotate-btn"
+                                    type="button"
+                            >
+                                <i class="mdi mdi-arrow-u-right-top-bold text-xl"></i>
+                            </button>
+                        </template>
+                    </div>
                 </div>
             </div>
         </div>
@@ -317,7 +319,7 @@
     .mu-plusbox-container{
         display: inline-flex !important;
         height: 90px !important;
-        width: 140px !important;
+        width: 168px !important;
         margin: 0.25rem !important;
     }
     .mu-plusbox {
@@ -328,7 +330,7 @@
         display: flex !important;
         flex-wrap: wrap !important;
         align-items: center !important;
-        width: 140px !important;
+        width: 162px !important;
         height: 90px !important;
     }
     .mu-plusbox:hover{
@@ -347,6 +349,7 @@
         height: 90px !important;
         margin: 0.25rem !important;
         position: relative;
+        margin-right: 2rem !important;
     }
     .mu-images-preview {
         border-radius: 5px !important;
@@ -374,7 +377,7 @@
         cursor: pointer !important;
         position: absolute !important;
         top: 0px;
-        right: 3px;
+        right: 1px;
     }
     .mu-left-rotate-btn {
         display:block;
@@ -385,8 +388,8 @@
         margin:0px !important;
         cursor: pointer !important;
         position: absolute !important;
-        top: 20px;
-        right: 3px;
+        top: 22px;
+        right: 1px;
     }
     .mu-right-rotate-btn {
         display:block;
@@ -397,8 +400,8 @@
         margin:0px !important;
         cursor: pointer !important;
         position: absolute !important;
-        top: 40px;
-        right: 3px;
+        top: 44px;
+        right: 1px;
     }
     .mu-times-icon{
         font-size: 3rem !important;
@@ -425,5 +428,14 @@
     }
     .text-red {
         color: red;
+    }
+    .img-actions-box {
+        position: absolute;
+        right: -23px;
+        top: 0;
+        width: 22px;
+        height: 90px;
+        background: gray;
+        border-radius: 5px !important;
     }
 </style>
