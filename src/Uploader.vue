@@ -105,14 +105,14 @@
                         }else{
                             this.$emit('maxFilesize', files[i].size)
                             if(this.warnings){
-                                alert('The file you are trying to upload is too big. \nMaximum Filesize: '+ this.maxFilesize +'MB')
+                                alert('Slika je prevelika. \nMaksimalna dozvoljena veličina slike je: '+ this.maxFilesize +'MB')
                             }
                             break;
                         }
                     }else{
                         this.$emit('max')
                         if(this.warnings){
-                            alert('You have reached the maximum number of files that you can upload. \nMaximum Files: '+ this.max)
+                            alert('Dostigli ste maksimalan broj slika koje možete da postavite. \nMaksimalan dozvoljen broj je: '+ this.max)
                         }
                         break;
                     }
