@@ -7,31 +7,31 @@
         props:{
             server: {
                 type: String,
-                default: '/api/upload'
+                default: '/api/upload',
             },
             isInvalid: {
                 type: Boolean,
-                default: false
+                default: false,
             },
             media:{
                 type: Array,
-                default: []
+                default: [],
             },
             location:{
                 type: String,
-                default: ''
+                default: '',
             },
             max:{
                 type: Number,
-                default: null
+                default: null,
             },
             maxFilesize:{
                 type: Number,
-                default: 4
+                default: 20,
             },
             warnings:{
                 type: Boolean,
-                default: true
+                default: true,
             },
             showLeftRotateButton:{
                 type: Boolean,
