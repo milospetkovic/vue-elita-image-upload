@@ -17,7 +17,7 @@
     "media-upload",
     "image-upload",
     "image-preview",
-    "vue-media-upload",
+    "vue-elita-media-upload",
     "dropzone",
     "forms",
     "laravel"

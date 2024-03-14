@@ -48,7 +48,7 @@
 <script>
 
 import axios from 'axios';
-import Uploader from 'vue-media-upload'
+import Uploader from 'vue-elita-image-upload'
 
     export default {
         props:{

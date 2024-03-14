@@ -1,56 +1,32 @@
 <div align="center">
 
-  <a href="https://www.npmjs.com/package/vue-media-upload" target="_blank">
-    <img alt="npm" src="https://img.shields.io/npm/v/vue-media-upload.svg?style=flat">
-  </a>
-  <a href="https://www.npmjs.com/package/vue-media-upload" target="_blank">
-    <img alt="npm" src="https://img.shields.io/npm/dm/vue-media-upload.svg?style=flat">
-  </a>
-  <a href="https://www.npmjs.com/package/vue-media-upload" target="_blank">
-    <img alt="npm" src="https://img.shields.io/npm/l/vue-media-upload.svg?style=flat">
-  </a>
-  <a href="https://www.npmjs.com/package/vue-media-upload" target="_blank">
-    <img alt="npm" src="https://img.shields.io/bundlephobia/minzip/vue-media-upload">
-  </a>
-
-  # vue-media-upload
+  # vue-elita-image-upload
 
 </div>
 <div align="">
 
-  📷 **vue-media-upload** is a Vuejs package that handle multiple images upload and preview.
+  📷 **vue-elita-image-upload** is a Vuejs package that handle multiple images upload and preview.
 
   🖼️ **This package** support **the create and the update form**, and handles the upload for you.
 
-  ![vue-media-upload - multiple image upload with preview ](/static/vue-media-upload.jpg)
+  ![vue-elita-image-upload - multiple image upload with preview ](/static/vue-elita-image-upload.jpg)
   
 </div>
-
-
-# 👀 Demo
-
-- [Full featured demo](https://github.com/saimow/media-upload-demo)
 
 
 # 💻 Install
 
 via npm
 ```sh
-npm install vue-media-upload
+npm install git+https://github.com/milospetkovic/vue-elita-image-upload.git
 ```
-
-or via yarn 
-```sh
-yarn add vue-media-upload
-```
-
 
 # 🕹 Usage
 
 ```javascript
 import { createApp } from 'vue';
 
-import Uploader from 'vue-media-upload';
+import Uploader from 'vue-elita-image-upload';
 
 let app = createApp({})
 
@@ -62,7 +38,7 @@ app.mount("#app")
 or
 
 ```javascript
-import Uploader from "vue-media-upload";
+import Uploader from "vue-elita-image-upload";
 
 export default {
   components: {
@@ -86,7 +62,7 @@ export default {
 </template>
 
 <script>
-  import Uploader from 'vue-media-upload'
+  import Uploader from 'vue-elita-image-upload'
 
   export default {
     data() {
@@ -122,7 +98,7 @@ export default {
 </template>
 
 <script>
-  import Uploader from 'vue-media-upload'
+  import Uploader from 'vue-elita-image-upload'
 
   export default {
     data() {
@@ -180,7 +156,7 @@ export default {
 
 # 📙 How it works in a Server-Rendered Form?
 
-1. **vue-media-upload** component uploads the image `image.jpg` as multipart/form-data using a POST request.
+1. **vue-elita-image-upload** component uploads the image `image.jpg` as multipart/form-data using a POST request.
 
 2. **server** temporary saves the image with a unique name `123_image.jpg` in a `/tmp/uploads` folder.
 
@@ -203,26 +179,6 @@ export default {
 | **removed_media[]**  | The images that have been removed from the stored media. |
 | **media**  | This input is added, when the component has at least one image or more listed, as a way for the backend to validate the Images as being required. |
 
-
-# 🤝 Contributing
-
-1. Fork this repository.
-2. Create new branch with feature name.
-3. Create your feature.
-4. Commit and set commit message with feature name.
-5. Push your code to your fork repository.
-6. Create pull request. 🙂
-
-
-# ⭐️ Support
-
-If you like this project, You can support me with starring ⭐ this repository.
-
-![vue-media-upload - multiple image upload with preview ](/static/vue-media-upload.jpg)
-
-
 # 📄 License
 
 [MIT](LICENSE)
-
-Developed with ❤️
