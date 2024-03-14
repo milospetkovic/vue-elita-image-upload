@@ -9,7 +9,7 @@
 
   🖼️ **This package** support **the create and the update form**, and handles the upload for you.
 
-  ![vue-elita-image-upload - multiple image upload with preview ](/static/vue-elita-image-upload.jpg)
+  ![vue-elita-image-upload - multiple image upload with preview ](/static/vue-elita-image-upload.png)
   
 </div>
 
