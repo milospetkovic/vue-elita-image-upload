@@ -70,9 +70,23 @@
 
                 this.$emit('init', this.allMedia)
             },
-            async fileChange(event){
+            dragOver(e) {
+                e.preventDefault();
+            },
+            dragLeave(e) {
+                e.preventDefault();
+            },
+            drop(e) {
+                e.preventDefault();
+                this.handleDropFiles(e);
+            },
+            handleDropFiles(event) {
+                event.target.files = event.dataTransfer.files;
+                this.fileChange(event)
+            },
+            async fileChange(event) {
                 this.isLoading = true
-                let files = event.target.files
+                let files = event.target.files;
 
                 for(var i=0; i < files.length; i++){
                     if(!this.max || this.allMedia.length < this.max){
@@ -243,7 +257,11 @@
             <div class="mu-elements-wraper">
 
                 <!--UPLOAD BUTTON-->
-                <div class="mu-plusbox-container">
+                <div class="mu-plusbox-container"
+                     @dragover.prevent="dragOver"
+                     @dragleave.prevent="dragLeave"
+                     @drop.prevent="drop"
+                >
                     <label for="mu-file-input" class="mu-plusbox">
                         <svg
                                 class="mu-plus-icon"
