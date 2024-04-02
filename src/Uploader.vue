@@ -56,6 +56,8 @@
                 isLoading:true,
                 dragIndex: null,
                 dropIndex: null,
+                mouseX: 0,
+                mouseY: 0,
             }
         },
         expose: ['finishedRotateImage', 'finishedDeleteImage'],
@@ -96,6 +98,7 @@
             },
             dragOver(e) {
                 e.preventDefault();
+
             },
             dragLeave(e) {
                 e.preventDefault();
@@ -383,22 +386,22 @@
     .mu-plusbox-container{
         display: inline-flex !important;
         height: 90px !important;
-        width: 168px !important;
+        width: 100% !important;
         margin: 0.25rem !important;
     }
     .mu-plusbox {
-        background-color: #ffffff !important;
+        background-color: #f1f1f1 !important;
         border: 1px dashed #818181 !important;
         border-radius: 5px !important;
         cursor: pointer !important;
         display: flex !important;
         flex-wrap: wrap !important;
         align-items: center !important;
-        width: 162px !important;
+        width: 100% !important;
         height: 90px !important;
     }
     .mu-plusbox:hover{
-        background-color: #f1f1f1 !important;
+        background-color: #f6f6f6 !important;
     }
     .mu-plusbox:hover > .mu-plus-icon{
         color: #028296 !important;
