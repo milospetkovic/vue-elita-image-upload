@@ -60,7 +60,11 @@
                 mouseY: 0,
             }
         },
-        expose: ['finishedRotateImage', 'finishedDeleteImage'],
+        expose: [
+            'finishedRotateImage',
+            'finishedDeleteImage',
+            'finishedSortImages',
+        ],
         methods:{
             init(){
                 this.addedMedia = this.media
@@ -90,11 +94,16 @@
             onImageDragEnd() {
                 console.log('onImageDragEnd');
 
+                // show loader.
                 this.isLoading = true;
 
-                this.renderImages();
+                // Collect sorted ids.
+                let ids = [];
+                this.addedMedia.forEach(item => {
+                    ids.push(item.id);
+                });
 
-                this.isLoading = false;
+                this.$emit('imagesSort', ids);
             },
             dragOver(e) {
                 e.preventDefault();
@@ -241,6 +250,15 @@
                 } else {
                     console.log('ERROR finishedDeleteImage', response);
                 }
+            },
+            finishedSortImages(response) {
+                if (response.data.isError === false) {
+                    this.renderImages();
+                    //console.log('SUCCESS finishedSortImages', response);
+                } else {
+                    //console.log('ERROR finishedSortImages', response);
+                }
+                this.isLoading = false;
             },
             showUploadError(message) {
                 const errorDiv = document.createElement('div');
