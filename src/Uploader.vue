@@ -53,7 +53,9 @@
             return{
                 addedMedia:[],
                 removedMedia:[],
-                isLoading:true
+                isLoading:true,
+                dragIndex: null,
+                dropIndex: null,
             }
         },
         expose: ['finishedRotateImage', 'finishedDeleteImage'],
@@ -69,6 +71,28 @@
                 this.isLoading = false;
 
                 this.$emit('init', this.allMedia)
+            },
+            onImageDragStart(index) {
+                this.dragIndex = index;
+            },
+            onImageDrop(index) {
+                if (this.dragIndex !== null) {
+                    this.dropIndex = index;
+                    // Splice to move the dragged element
+                    const draggedElement = this.addedMedia.splice(this.dragIndex, 1)[0];
+                    this.addedMedia.splice(this.dropIndex, 0, draggedElement);
+                    this.dragIndex = null;
+                    this.dropIndex = null;
+                }
+            },
+            onImageDragEnd() {
+                console.log('onImageDragEnd');
+
+                this.isLoading = true;
+
+                this.renderImages();
+
+                this.isLoading = false;
             },
             dragOver(e) {
                 e.preventDefault();
@@ -281,7 +305,16 @@
                 </div>
 
                 <!--IMAGES PREVIEW-->
-                <div v-for="(image, index) in addedMedia" :key="index" class="mu-image-container">
+                <div
+                        v-for="(image, index) in addedMedia"
+                        :key="index"
+                        class="mu-image-container"
+                        :draggable="true"
+                        @dragstart="onImageDragStart(index)"
+                        @dragover.prevent
+                        @drop="onImageDrop(index)"
+                        @dragend="onImageDragEnd"
+                >
                     <canvas :ref="'canvas' + index" class="mu-images-preview"></canvas>
                     <div class="img-actions-box">
                         <template v-if="showLeftRotateButton">
@@ -375,12 +408,16 @@
         font-size: 3rem !important;
         flex: 1;
     }
-    .mu-image-container{
+    .mu-image-container {
         width: 140px !important;
         height: 90px !important;
         margin: 0.25rem !important;
         position: relative;
         margin-right: 2rem !important;
+        transition: transform 0.2s ease-in-out;
+    }
+    .mu-image-container:hover {
+        cursor: crosshair;
     }
     .mu-images-preview {
         border-radius: 5px !important;
@@ -407,7 +444,7 @@
         margin:0px !important;
         cursor: pointer !important;
         position: absolute !important;
-        top: 44px;
+        top: 60px;
         right: 1px;
     }
     .mu-left-rotate-btn {
