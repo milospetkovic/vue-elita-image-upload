@@ -56,7 +56,7 @@
                 isLoading:true
             }
         },
-        expose: ['finishedRotateImage'],
+        expose: ['finishedRotateImage', 'finishedDeleteImage'],
         methods:{
             init(){
                 this.addedMedia = this.media
@@ -122,8 +122,6 @@
             },
             removeAddedMedia(index){
                 let removedImage = this.addedMedia[index]
-                this.addedMedia.splice(index,1)
-
                 this.$emit('change', this.allMedia)
                 this.$emit('remove', removedImage, this.removedMedia)
             },
@@ -187,6 +185,20 @@
                     this.drawImageOnCanvas(canvas, imageSrc);
                 } else {
                     console.log('ERROR finishedRotateImage', response);
+                }
+            },
+            finishedDeleteImage(response) {
+                if (response.data.isError === false) {
+                    let imgId = response.data.data[0].id;
+                    this.addedMedia.forEach((image, index) => {
+                        if (image.id === imgId) {
+                            this.addedMedia.splice(index,1);
+                            this.renderImages();
+                            return true;
+                        }
+                    });
+                } else {
+                    console.log('ERROR finishedDeleteImage', response);
                 }
             },
             showUploadError(message) {
@@ -254,14 +266,6 @@
                 <div v-for="(image, index) in addedMedia" :key="index" class="mu-image-container">
                     <canvas :ref="'canvas' + index" class="mu-images-preview"></canvas>
                     <div class="img-actions-box">
-                        <button
-                                @click="removeAddedMedia(index)"
-                                :disabled="buttonsDisabled"
-                                class="mu-close-btn"
-                                type="button"
-                        >
-                            <i class="mdi mdi-delete text-xl"></i>
-                        </button>
                         <template v-if="showLeftRotateButton">
                             <button
                                     @click="rotateImage(index, true)"
@@ -282,6 +286,15 @@
                                 <i class="mdi mdi-arrow-u-right-top-bold text-xl"></i>
                             </button>
                         </template>
+
+                        <button
+                                @click="removeAddedMedia(index)"
+                                :disabled="buttonsDisabled"
+                                class="mu-close-btn"
+                                type="button"
+                        >
+                            <i class="mdi mdi-delete text-xl"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -376,7 +389,7 @@
         margin:0px !important;
         cursor: pointer !important;
         position: absolute !important;
-        top: 0px;
+        top: 44px;
         right: 1px;
     }
     .mu-left-rotate-btn {
@@ -388,7 +401,7 @@
         margin:0px !important;
         cursor: pointer !important;
         position: absolute !important;
-        top: 22px;
+        top: 0px;
         right: 1px;
     }
     .mu-right-rotate-btn {
@@ -400,7 +413,7 @@
         margin:0px !important;
         cursor: pointer !important;
         position: absolute !important;
-        top: 44px;
+        top: 22px;
         right: 1px;
     }
     .mu-times-icon{
