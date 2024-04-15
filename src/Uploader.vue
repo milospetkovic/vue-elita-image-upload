@@ -223,7 +223,11 @@
             getImagesPreview() {
                 this.addedMedia.forEach((image, index) => {
                     if (!this.addedMedia[index].url) {
-                        this.addedMedia[index].url = this.location + "/" + image.name;
+                        this.addedMedia[index].url = this.location +
+                                "/thumbs" +
+                                "/" + image.id +
+                                "/" + image.fname +
+                                "_130x100." + image.fext;
                     }
                 });
             },
