@@ -67,7 +67,7 @@
         ],
         methods:{
             init(){
-                this.addedMedia = this.media
+                this.addedMedia = this.media;
 
                 this.isLoading = true;
 
@@ -141,7 +141,11 @@
                                     name: data.data.name,
                                     size: files[i].size,
                                     type: files[i].type,
-                                    url: this.location + "/" + data.data.name,
+                                    url: this.location +
+                                            "/thumbs" +
+                                            "/" + data.data.id +
+                                            "/" + data.data.fname +
+                                            "_130x100." + data.data.fext,
                                 };
                                 this.addedMedia.push(addedImage)
 
