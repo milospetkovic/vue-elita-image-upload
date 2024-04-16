@@ -339,10 +339,12 @@
                         :key="index"
                         class="mu-image-container"
                         :draggable="true"
-                        @dragstart="onImageDragStart(index)"
                         @dragover.prevent
                         @drop="onImageDrop(index)"
+                        @dragstart="onImageDragStart(index)"
                         @dragend="onImageDragEnd"
+                        @touchstart="onImageDragStart(index)"
+                        @touchend="onImageDragEnd"
                 >
                     <canvas :ref="'canvas' + index" class="mu-images-preview"></canvas>
                     <div class="img-actions-box">
