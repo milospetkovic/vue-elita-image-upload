@@ -444,7 +444,7 @@
         height: 90px !important;
         margin: 0.25rem !important;
         position: relative;
-        margin-right: 2rem !important;
+        margin-right: 1.5rem !important;
         transition: transform 0.2s ease-in-out;
     }
     .mu-image-container:hover {
