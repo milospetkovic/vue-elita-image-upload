@@ -92,7 +92,6 @@
                 }
             },
             onImageDragEnd() {
-                console.log('onImageDragEnd');
 
                 // show loader.
                 this.isLoading = true;
@@ -180,23 +179,15 @@
                 this.$emit('remove', removedImage, this.removedMedia)
             },
             renderImages() {
-                console.log('renderimages');
                 this.$nextTick(() => {
                     this.addedMedia.forEach((image, index) => {
                         const canvas = this.$refs['canvas' + index][0];
                         const imageSrc = encodeURI(this.addedMedia[index].url);
-
-                        console.log('renderimages canvas', canvas);
-                        console.log('renderimages imageSrc', imageSrc);
-
                         this.drawImageOnCanvas(canvas, imageSrc);
                     });
                 });
             },
             drawImageOnCanvas(canvas, imageSrc) {
-
-                console.log('drawImageOnCanvas', imageSrc);
-
                 const ctx = canvas.getContext('2d');
 
                 // Clear canvas before drawing
@@ -207,7 +198,6 @@
                 img.onload = () => {
                     //canvas.width = 140;
                     //canvas.height = 90;
-                    console.log('on img load');
 
                     const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
                     const scaledWidth = img.width * scale;
@@ -221,7 +211,6 @@
                 img.src = imageSrc + '?t=' + new Date().getTime();
             },
             rotateImage(index, rotateLeft=false) {
-                console.log('in component rotateLeft', rotateLeft);
                 this.$emit('rotateImage', this.addedMedia[index], index, rotateLeft);
             },
             getImagesPreview() {
@@ -237,12 +226,11 @@
             },
             finishedRotateImage(response, index) {
                 if (response.data.isError === false) {
-                    console.log('finishedRotateImage - now rotate!', response);
                     const canvas = this.$refs['canvas' + index][0];
                     const imageSrc = encodeURI(this.addedMedia[index].url);
                     this.drawImageOnCanvas(canvas, imageSrc);
                 } else {
-                    console.log('ERROR finishedRotateImage', response);
+                    //
                 }
             },
             finishedDeleteImage(response) {
@@ -256,15 +244,14 @@
                         }
                     });
                 } else {
-                    console.log('ERROR finishedDeleteImage', response);
+                    //
                 }
             },
             finishedSortImages(response) {
                 if (response.data.isError === false) {
                     this.renderImages();
-                    //console.log('SUCCESS finishedSortImages', response);
                 } else {
-                    //console.log('ERROR finishedSortImages', response);
+                    //
                 }
                 this.isLoading = false;
             },
