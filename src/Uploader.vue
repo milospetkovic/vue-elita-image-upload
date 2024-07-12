@@ -92,7 +92,6 @@
                 }
             },
             onImageDragEnd() {
-
                 // show loader.
                 this.isLoading = true;
 
@@ -279,9 +278,10 @@
             'max',
             'maxFilesize',
             'rotateImage',
+            'imagesSort',
         ],
-        components:{
-            Loader
+        components: {
+            Loader, 
         }
     }
 </script>
@@ -289,10 +289,10 @@
     <div>
         <div class="mu-container" :class="isInvalid?'mu-red-border':''">
             <Loader
-                    color="#0275d8"
-                    :active="isLoading"
-                    spinner="line-scale"
-                    background-color = 'rgba(255, 255, 255, .4)'
+                color="#0275d8"
+                :active="isLoading"
+                spinner="line-scale"
+                background-color = 'rgba(255, 255, 255, .4)'
             />
             <div class="mu-elements-wraper">
 
@@ -304,16 +304,16 @@
                 >
                     <label for="mu-file-input" class="mu-plusbox">
                         <svg
-                                class="mu-plus-icon"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="1em"
-                                height="1em"
-                                preserveAspectRatio="xMidYMid meet"
-                                viewBox="0 0 24 24">
+                            class="mu-plus-icon"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="1em"
+                            height="1em"
+                            preserveAspectRatio="xMidYMid meet"
+                            viewBox="0 0 24 24">
                             <g fill="none">
                                 <path
-                                        d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1zm1 15a1 1 0 1 1-2 0v-3H8a1 1 0 1 1 0-2h3V8a1 1 0 1 1 2 0v3h3a1 1 0 1 1 0 2h-3v3z"
-                                        fill="currentColor"/>
+                                    d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1zm1 15a1 1 0 1 1-2 0v-3H8a1 1 0 1 1 0-2h3V8a1 1 0 1 1 2 0v3h3a1 1 0 1 1 0 2h-3v3z"
+                                    fill="currentColor"/>
                             </g>
                         </svg>
                     </label>
@@ -337,30 +337,30 @@
                     <div class="img-actions-box">
                         <template v-if="showLeftRotateButton">
                             <button
-                                    @click="rotateImage(index, true)"
-                                    :disabled="buttonsDisabled"
-                                    class="mu-left-rotate-btn"
-                                    type="button"
+                                @click="rotateImage(index, true)"
+                                :disabled="buttonsDisabled"
+                                class="mu-left-rotate-btn"
+                                type="button"
                             >
                                 <i class="mdi mdi-arrow-u-left-top-bold text-xl"></i>
                             </button>
                         </template>
                         <template v-if="showRightRotateButton">
                             <button
-                                    @click="rotateImage(index)"
-                                    :disabled="buttonsDisabled"
-                                    class="mu-right-rotate-btn"
-                                    type="button"
+                                @click="rotateImage(index)"
+                                :disabled="buttonsDisabled"
+                                class="mu-right-rotate-btn"
+                                type="button"
                             >
                                 <i class="mdi mdi-arrow-u-right-top-bold text-xl"></i>
                             </button>
                         </template>
 
                         <button
-                                @click="removeAddedMedia(index)"
-                                :disabled="buttonsDisabled"
-                                class="mu-close-btn"
-                                type="button"
+                            @click="removeAddedMedia(index)"
+                            :disabled="buttonsDisabled"
+                            class="mu-close-btn"
+                            type="button"
                         >
                             <i class="mdi mdi-delete text-xl"></i>
                         </button>
