@@ -4,7 +4,8 @@
     //import Draggable from 'vuedraggable';
     //import { VueDraggableNext } from 'vuedraggable';
     //import { vuedraggable } from 'vuedraggable';
-    import { VueDraggable } from 'vuedraggable';
+    //import { VueDraggable } from 'vuedraggable';
+    import { VueDraggableNext } from 'vue-draggable-next';
 
     export default {
 
@@ -301,7 +302,8 @@
         ],
         components: {
             Loader,
-            VueDraggable,
+            //VueDraggable,
+            draggable: VueDraggableNext,
         },
     }
 </script>
@@ -341,7 +343,7 @@
                 </div>
 
                 <!-- IMAGES PREVIEW WITH DRAGGABLE -->
-                <VueDraggable
+                <draggable
                     v-model="addedMedia"
                     @end="onDragEnd"
                     class="drag-area"
@@ -393,7 +395,7 @@
                             </button>
                         </div>
                     </div>
-                </VueDraggable>
+                </draggable>
             </div>
         </div>
         <div>
