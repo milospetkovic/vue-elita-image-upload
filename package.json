@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/milospetkovic/vue-elita-image-upload.git"
   },
+  "dependencies": {
+    "vue-draggable-next": "^2.2.1"
+  },
   "keywords": [
     "vue",
     "javascript",

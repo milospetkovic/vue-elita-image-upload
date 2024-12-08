@@ -1,6 +1,11 @@
 <script>
     import Loader from './loader/index.vue';
     import axios from 'axios'
+    //import Draggable from 'vuedraggable';
+    //import { VueDraggableNext } from 'vuedraggable';
+    //import { vuedraggable } from 'vuedraggable';
+    //import { VueDraggable } from 'vuedraggable';
+    import { VueDraggableNext } from 'vue-draggable-next';
 
     export default {
 
@@ -103,9 +108,24 @@
 
                 this.$emit('imagesSort', ids);
             },
+            onDragEnd(evt) {
+                // Emitovanje promene redosleda
+                //const sortedIds = this.addedMedia.map(item => item.id);
+                ///this.$emit('imagesSort', sortedIds);
+
+                // show loader.
+                this.isLoading = true;
+
+                // Collect sorted ids.
+                let ids = [];
+                this.addedMedia.forEach(item => {
+                    ids.push(item.id);
+                });
+
+                this.$emit('imagesSort', ids);
+            },
             dragOver(e) {
                 e.preventDefault();
-
             },
             dragLeave(e) {
                 e.preventDefault();
@@ -281,8 +301,10 @@
             'imagesSort',
         ],
         components: {
-            Loader, 
-        }
+            Loader,
+            //VueDraggable,
+            draggable: VueDraggableNext,
+        },
     }
 </script>
 <template>
@@ -320,8 +342,14 @@
                     <input @change="fileChange" id="mu-file-input" type="file" accept="image/*" multiple hidden>
                 </div>
 
-                <!--IMAGES PREVIEW-->
-                <div
+                <!-- IMAGES PREVIEW WITH DRAGGABLE -->
+                <draggable
+                    v-model="addedMedia"
+                    @end="onDragEnd"
+                    class="drag-area"
+                    ghost-class="ghost"
+                >
+                    <div
                         v-for="(image, index) in addedMedia"
                         :key="index"
                         class="mu-image-container"
@@ -332,40 +360,42 @@
                         @dragend="onImageDragEnd"
                         @touchstart="onImageDragStart(index)"
                         @touchend="onImageDragEnd"
-                >
-                    <canvas :ref="'canvas' + index" class="mu-images-preview"></canvas>
-                    <div class="img-actions-box">
-                        <template v-if="showLeftRotateButton">
-                            <button
-                                @click="rotateImage(index, true)"
-                                :disabled="buttonsDisabled"
-                                class="mu-left-rotate-btn"
-                                type="button"
-                            >
-                                <i class="mdi mdi-arrow-u-left-top-bold text-xl"></i>
-                            </button>
-                        </template>
-                        <template v-if="showRightRotateButton">
-                            <button
-                                @click="rotateImage(index)"
-                                :disabled="buttonsDisabled"
-                                class="mu-right-rotate-btn"
-                                type="button"
-                            >
-                                <i class="mdi mdi-arrow-u-right-top-bold text-xl"></i>
-                            </button>
-                        </template>
+                    >
+                        <span class="mu-image-number">{{ index + 1 }}</span>
+                        <canvas :ref="'canvas' + index" class="mu-images-preview"></canvas>
+                        <div class="img-actions-box">
+                            <template v-if="showLeftRotateButton">
+                                <button
+                                    @click="rotateImage(index, true)"
+                                    :disabled="buttonsDisabled"
+                                    class="mu-left-rotate-btn"
+                                    type="button"
+                                >
+                                    <i class="mdi mdi-arrow-u-left-top-bold text-xl"></i>
+                                </button>
+                            </template>
+                            <template v-if="showRightRotateButton">
+                                <button
+                                    @click="rotateImage(index)"
+                                    :disabled="buttonsDisabled"
+                                    class="mu-right-rotate-btn"
+                                    type="button"
+                                >
+                                    <i class="mdi mdi-arrow-u-right-top-bold text-xl"></i>
+                                </button>
+                            </template>
 
-                        <button
-                            @click="removeAddedMedia(index)"
-                            :disabled="buttonsDisabled"
-                            class="mu-close-btn"
-                            type="button"
-                        >
-                            <i class="mdi mdi-delete text-xl"></i>
-                        </button>
+                            <button
+                                @click="removeAddedMedia(index)"
+                                :disabled="buttonsDisabled"
+                                class="mu-close-btn"
+                                type="button"
+                            >
+                                <i class="mdi mdi-delete text-xl"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </draggable>
             </div>
         </div>
         <div>
@@ -384,6 +414,17 @@
     </div>
 </template>
 <style>
+    .mu-image-number {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        font-size: 14px;
+        border-radius: 3px;
+        padding: 2px 4px;
+        z-index: 10;
+    }
     .mu-container{
         background-color: #fbfbfb !important;
         border-radius: 5px !important;
@@ -523,5 +564,13 @@
         height: 90px;
         background: gray;
         border-radius: 5px !important;
+    }
+    .drag-area {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .ghost {
+        opacity: 0.5;
+        transform: scale(0.9);
     }
 </style>
