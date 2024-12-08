@@ -1,7 +1,8 @@
 <script>
     import Loader from './loader/index.vue';
     import axios from 'axios'
-    import draggable from 'vuedraggable';
+    //import draggable from 'vuedraggable';
+    import { VueDraggableNext } from 'vuedraggable';
 
     export default {
 
@@ -298,7 +299,7 @@
         ],
         components: {
             Loader,
-            draggable,
+            draggable: VueDraggableNext,
         },
     }
 </script>
