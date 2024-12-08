@@ -281,7 +281,7 @@
             'imagesSort',
         ],
         components: {
-            Loader, 
+            Loader,
         }
     }
 </script>
@@ -322,17 +322,18 @@
 
                 <!--IMAGES PREVIEW-->
                 <div
-                        v-for="(image, index) in addedMedia"
-                        :key="index"
-                        class="mu-image-container"
-                        :draggable="true"
-                        @dragover.prevent
-                        @drop="onImageDrop(index)"
-                        @dragstart="onImageDragStart(index)"
-                        @dragend="onImageDragEnd"
-                        @touchstart="onImageDragStart(index)"
-                        @touchend="onImageDragEnd"
+                    v-for="(image, index) in addedMedia"
+                    :key="index"
+                    class="mu-image-container"
+                    :draggable="true"
+                    @dragover.prevent
+                    @drop="onImageDrop(index)"
+                    @dragstart="onImageDragStart(index)"
+                    @dragend="onImageDragEnd"
+                    @touchstart="onImageDragStart(index)"
+                    @touchend="onImageDragEnd"
                 >
+                    <span class="mu-image-number">{{ index + 1 }}</span>
                     <canvas :ref="'canvas' + index" class="mu-images-preview"></canvas>
                     <div class="img-actions-box">
                         <template v-if="showLeftRotateButton">
@@ -384,6 +385,17 @@
     </div>
 </template>
 <style>
+    .mu-image-number {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        font-size: 14px;
+        border-radius: 3px;
+        padding: 2px 4px;
+        z-index: 10;
+    }
     .mu-container{
         background-color: #fbfbfb !important;
         border-radius: 5px !important;
