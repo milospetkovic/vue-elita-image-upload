@@ -4,7 +4,7 @@
     //import Draggable from 'vuedraggable';
     //import { VueDraggableNext } from 'vuedraggable';
     //import { vuedraggable } from 'vuedraggable';
-    import VueDraggable from 'vuedraggable';
+    import { VueDraggable } from 'vuedraggable';
 
     export default {
 
