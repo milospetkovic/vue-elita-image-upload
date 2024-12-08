@@ -1,7 +1,7 @@
 <script>
     import Loader from './loader/index.vue';
     import axios from 'axios'
-    import draggable from 'vuedraggable';
+    import Draggable from 'vuedraggable';
     //import { VueDraggableNext } from 'vuedraggable';
 
     export default {
@@ -299,7 +299,7 @@
         ],
         components: {
             Loader,
-            draggable: draggable.default || draggable,
+            Draggable,
         },
     }
 </script>
@@ -339,7 +339,7 @@
                 </div>
 
                 <!-- IMAGES PREVIEW WITH DRAGGABLE -->
-                <draggable
+                <Draggable
                     v-model="addedMedia"
                     @end="onDragEnd"
                     class="drag-area"
@@ -391,7 +391,7 @@
                             </button>
                         </div>
                     </div>
-                </draggable>
+                </Draggable>
             </div>
         </div>
         <div>
