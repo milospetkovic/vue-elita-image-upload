@@ -346,6 +346,8 @@
                 <draggable
                     v-model="addedMedia"
                     @end="onDragEnd"
+                    :filter="'.ignore-drag'"
+                    @filter="onFilter"
                     class="drag-area"
                     ghost-class="ghost"
                 >
@@ -368,7 +370,7 @@
                                 <button
                                     @click="rotateImage(index, true)"
                                     :disabled="buttonsDisabled"
-                                    class="mu-left-rotate-btn"
+                                    class="mu-left-rotate-btn ignore-drag"
                                     type="button"
                                 >
                                     <i class="mdi mdi-arrow-u-left-top-bold text-xl"></i>
@@ -378,7 +380,7 @@
                                 <button
                                     @click="rotateImage(index)"
                                     :disabled="buttonsDisabled"
-                                    class="mu-right-rotate-btn"
+                                    class="mu-right-rotate-btn ignore-drag"
                                     type="button"
                                 >
                                     <i class="mdi mdi-arrow-u-right-top-bold text-xl"></i>
@@ -388,7 +390,7 @@
                             <button
                                 @click="removeAddedMedia(index)"
                                 :disabled="buttonsDisabled"
-                                class="mu-close-btn"
+                                class="mu-close-btn ignore-drag"
                                 type="button"
                             >
                                 <i class="mdi mdi-delete text-xl"></i>
@@ -414,163 +416,167 @@
     </div>
 </template>
 <style>
-    .mu-image-number {
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        font-size: 14px;
-        border-radius: 3px;
-        padding: 2px 4px;
-        z-index: 10;
-    }
-    .mu-container{
-        background-color: #fbfbfb !important;
-        border-radius: 5px !important;
-        border-style: solid !important;
-        border: 1px solid #9b9b9b !important;
-        box-sizing: border-box !important;
-        width: 100% !important;
-        height: auto !important;
-    }
-    .mu-elements-wraper {
-        padding: 1rem !important;
-        display: flex !important;
-        flex-wrap: wrap !important;
-    }
-    .mu-plusbox-container{
-        display: inline-flex !important;
-        height: 90px !important;
-        width: 100% !important;
-        margin: 0.25rem !important;
-    }
-    .mu-plusbox {
-        background-color: #f1f1f1 !important;
-        border: 1px dashed #818181 !important;
-        border-radius: 5px !important;
-        cursor: pointer !important;
-        display: flex !important;
-        flex-wrap: wrap !important;
-        align-items: center !important;
-        width: 100% !important;
-        height: 90px !important;
-    }
-    .mu-plusbox:hover{
-        background-color: #f6f6f6 !important;
-    }
-    .mu-plusbox:hover > .mu-plus-icon{
-        color: #028296 !important;
-    }
-    .mu-plus-icon{
-        color: #00afca !important;
-        font-size: 3rem !important;
-        flex: 1;
-    }
-    .mu-image-container {
-        width: 140px !important;
-        height: 90px !important;
-        margin: 0.25rem !important;
-        position: relative;
-        margin-right: 1.5rem !important;
-        transition: transform 0.2s ease-in-out;
-    }
-    .mu-image-container:hover {
-        cursor: crosshair;
-    }
-    .mu-images-preview {
-        border-radius: 5px !important;
-        border: 1px solid #818181 !important;
-        width: 140px !important;
-        height: 90px !important;
-        /*transition: filter 0.1s linear;*/
-        object-fit: cover;
-        object-position: center;
-        background: gray;
-    }
-    .mu-images-preview:hover{
-        filter: brightness(90%);
-    }
-    button:disabled {
-        opacity: 0.4;
-    }
-    .mu-close-btn{
-        display:block;
-        background: none !important;
-        color:white !important;
-        border: none !important;
-        padding: 0px !important;
-        margin:0px !important;
-        cursor: pointer !important;
-        position: absolute !important;
-        top: 60px;
-        right: 1px;
-    }
-    .mu-left-rotate-btn {
-        display:block;
-        background: none !important;
-        color:white !important;
-        border: none !important;
-        padding: 0px !important;
-        margin:0px !important;
-        cursor: pointer !important;
-        position: absolute !important;
-        top: 0px;
-        right: 1px;
-    }
-    .mu-right-rotate-btn {
-        display:block;
-        background: none !important;
-        color:white !important;
-        border: none !important;
-        padding: 0px !important;
-        margin:0px !important;
-        cursor: pointer !important;
-        position: absolute !important;
-        top: 22px;
-        right: 1px;
-    }
-    .mu-times-icon{
-        font-size: 3rem !important;
-        filter: drop-shadow(0px 0px 1px black);
-    }
-    .mu-close-btn:hover{
-        color: red !important;
-    }
-    .mu-left-rotate-btn:hover,
-    .mu-right-rotate-btn:hover {
-        color: yellow !important;
-    }
-    .mu-red-border {
-        border: 1px solid #dc3545 !important;
-    }
-    .mu-mt-1 {
-        margin-top: 0.25rem !important;
-    }
-    img {
-        -webkit-user-drag: none;
-        -khtml-user-drag: none;
-        -moz-user-drag: none;
-        -o-user-drag: none;
-    }
-    .text-red {
-        color: red;
-    }
-    .img-actions-box {
-        position: absolute;
-        right: -23px;
-        top: 0;
-        width: 22px;
-        height: 90px;
-        background: gray;
-        border-radius: 5px !important;
-    }
-    .drag-area {
-        display: flex;
-        flex-wrap: wrap;
-    }
-    .ghost {
-        opacity: 0.5;
-        transform: scale(0.9);
-    }
+.mu-image-number {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 14px;
+    border-radius: 3px;
+    padding: 2px 4px;
+    z-index: 10;
+}
+.mu-container{
+    background-color: #fbfbfb !important;
+    border-radius: 5px !important;
+    border-style: solid !important;
+    border: 1px solid #9b9b9b !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: auto !important;
+}
+.mu-elements-wraper {
+    padding: 1rem !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+.mu-plusbox-container{
+    display: inline-flex !important;
+    height: 90px !important;
+    width: 100% !important;
+    margin: 0.25rem !important;
+}
+.mu-plusbox {
+    background-color: #f1f1f1 !important;
+    border: 1px dashed #818181 !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 90px !important;
+}
+.mu-plusbox:hover{
+    background-color: #f6f6f6 !important;
+}
+.mu-plusbox:hover > .mu-plus-icon{
+    color: #028296 !important;
+}
+.mu-plus-icon{
+    color: #00afca !important;
+    font-size: 3rem !important;
+    flex: 1;
+}
+.mu-image-container {
+    width: 140px !important;
+    height: 90px !important;
+    margin: 0.25rem !important;
+    position: relative;
+    margin-right: 1.5rem !important;
+    transition: transform 0.2s ease-in-out;
+}
+.mu-image-container:hover {
+    cursor: crosshair;
+}
+.mu-images-preview {
+    border-radius: 5px !important;
+    border: 1px solid #818181 !important;
+    width: 140px !important;
+    height: 90px !important;
+    /*transition: filter 0.1s linear;*/
+    object-fit: cover;
+    object-position: center;
+    background: gray;
+}
+.mu-images-preview:hover{
+    filter: brightness(90%);
+}
+button:disabled {
+    opacity: 0.4;
+}
+.mu-close-btn{
+    display:block;
+    background: none !important;
+    color:white !important;
+    border: none !important;
+    padding: 0px !important;
+    margin:0px !important;
+    cursor: pointer !important;
+    position: absolute !important;
+    top: 60px;
+    right: 1px;
+}
+.mu-left-rotate-btn {
+    display:block;
+    background: none !important;
+    color:white !important;
+    border: none !important;
+    padding: 0px !important;
+    margin:0px !important;
+    cursor: pointer !important;
+    position: absolute !important;
+    top: 0px;
+    right: 1px;
+}
+.mu-right-rotate-btn {
+    display:block;
+    background: none !important;
+    color:white !important;
+    border: none !important;
+    padding: 0px !important;
+    margin:0px !important;
+    cursor: pointer !important;
+    position: absolute !important;
+    top: 22px;
+    right: 1px;
+}
+.mu-times-icon{
+    font-size: 3rem !important;
+    filter: drop-shadow(0px 0px 1px black);
+}
+.mu-close-btn:hover{
+    color: red !important;
+}
+.mu-left-rotate-btn:hover,
+.mu-right-rotate-btn:hover {
+    color: yellow !important;
+}
+.mu-red-border {
+    border: 1px solid #dc3545 !important;
+}
+.mu-mt-1 {
+    margin-top: 0.25rem !important;
+}
+img {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+}
+.text-red {
+    color: red;
+}
+.img-actions-box {
+    position: absolute;
+    right: -23px;
+    top: 0;
+    width: 22px;
+    height: 90px;
+    background: gray;
+    border-radius: 5px !important;
+}
+.drag-area {
+    display: flex;
+    flex-wrap: wrap;
+}
+.ghost {
+    opacity: 0.5;
+    transform: scale(0.9);
+}
+.ignore-drag {
+    pointer-events: auto;
+    z-index: 10;
+}
 </style>
