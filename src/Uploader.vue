@@ -230,7 +230,7 @@
                 img.src = imageSrc + '?t=' + new Date().getTime();
             },
             rotateImage(index, rotateLeft=false) {
-                console.log(`Rotating image at index: ${index}, clockwise: ${clockwise}`);
+                console.log(`Rotating image at index: ${index}, clockwise: ${rotateLeft}`);
                 this.$emit('rotateImage', this.addedMedia[index], index, rotateLeft);
             },
             getImagesPreview() {
