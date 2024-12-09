@@ -347,7 +347,6 @@
                 <draggable
                     v-model="addedMedia"
                     @end="onDragEnd"
-                    :delay="200"
                     :filter="'.ignore-drag'"
                     @filter="onFilter"
                     :prevent="'.ignore-drag'"
