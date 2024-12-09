@@ -230,6 +230,7 @@
                 img.src = imageSrc + '?t=' + new Date().getTime();
             },
             rotateImage(index, rotateLeft=false) {
+                console.log(`Rotating image at index: ${index}, clockwise: ${clockwise}`);
                 this.$emit('rotateImage', this.addedMedia[index], index, rotateLeft);
             },
             getImagesPreview() {
@@ -349,6 +350,7 @@
                     :delay="200"
                     :filter="'.ignore-drag'"
                     @filter="onFilter"
+                    :prevent="'.ignore-drag'"
                     class="drag-area"
                     ghost-class="ghost"
                 >
@@ -370,6 +372,7 @@
                             <template v-if="showLeftRotateButton">
                                 <button
                                     @click="rotateImage(index, true)"
+                                    @touchstart="rotateImage(index, true)"
                                     :disabled="buttonsDisabled"
                                     class="mu-left-rotate-btn ignore-drag"
                                     type="button"
@@ -382,6 +385,7 @@
                             <template v-if="showRightRotateButton">
                                 <button
                                     @click="rotateImage(index)"
+                                    @touchstart="rotateImage(index)"
                                     :disabled="buttonsDisabled"
                                     class="mu-right-rotate-btn ignore-drag"
                                     type="button"
@@ -394,6 +398,7 @@
 
                             <button
                                 @click="removeAddedMedia(index)"
+                                @touchstart="removeAddedMedia(index)"
                                 :disabled="buttonsDisabled"
                                 class="mu-close-btn ignore-drag"
                                 type="button"
@@ -583,7 +588,7 @@ img {
     transform: scale(0.9);
 }
 .ignore-drag {
-    pointer-events: auto;
+    pointer-events: all;
     z-index: 10;
 }
 </style>
