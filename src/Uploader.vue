@@ -365,13 +365,15 @@
                     >
                         <span class="mu-image-number">{{ index + 1 }}</span>
                         <canvas :ref="'canvas' + index" class="mu-images-preview"></canvas>
-                        <div class="img-actions-box">
+                        <div class="img-actions-box ignore-drag">
                             <template v-if="showLeftRotateButton">
                                 <button
                                     @click="rotateImage(index, true)"
                                     :disabled="buttonsDisabled"
                                     class="mu-left-rotate-btn ignore-drag"
                                     type="button"
+                                    @mousedown.stop
+                                    @touchstart.stop
                                 >
                                     <i class="mdi mdi-arrow-u-left-top-bold text-xl"></i>
                                 </button>
@@ -382,6 +384,8 @@
                                     :disabled="buttonsDisabled"
                                     class="mu-right-rotate-btn ignore-drag"
                                     type="button"
+                                    @mousedown.stop
+                                    @touchstart.stop
                                 >
                                     <i class="mdi mdi-arrow-u-right-top-bold text-xl"></i>
                                 </button>
@@ -392,6 +396,8 @@
                                 :disabled="buttonsDisabled"
                                 class="mu-close-btn ignore-drag"
                                 type="button"
+                                @mousedown.stop
+                                @touchstart.stop
                             >
                                 <i class="mdi mdi-delete text-xl"></i>
                             </button>

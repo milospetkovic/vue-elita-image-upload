@@ -1,6 +1,6 @@
 {
   "name": "vue-elita-image-upload",
-  "version": "3.0.0",
+  "version": "3.3.0",
   "description": "upload multiple images with preview",
   "main": "index.js",
   "scripts": {
